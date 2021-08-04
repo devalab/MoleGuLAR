@@ -16,17 +16,54 @@ Running Experiments
 Open the `Optimizer` directory.
 
 To run each of the experiments run the following commands
-- Single Objective: Binding Affinity with SARS-CoV-2 $M_{pro}$ using Docking Calculation
+- Single Objective: Binding Affinity with SARS-CoV-2 M<sub>pro</sub> using Docking Calculation
+
 ```python model_logP_QED_switch.py --reward_function exponential --num_iterations 175 --use_wandb yes --predictor dock --protein 6LU7 --remarks <remarks>```
+
 - Single Objective: Binding Affinity with TTBK1 using Docking Calculation
+
 ```python model_logP_QED_switch.py --reward_function exponential --num_iterations 175 --use_wandb yes --predictor dock --protein 4BTK --remarks <remarks>```
+
 - Single Objective: Binding Affinity with TTBK1 using GIN
+
 ```python model_logP_QED_switch.py --reward_function exponential --num_iterations 175 --use_wandb yes --predictor gin --protein 4BTK --remarks <remarks>```
-- Multi Objective : Binding Affinity with SARS-CoV-2 $M_{pro}$ using Docking Calculation and target LogP = 2.5 (sum)
+
+- Multi Objective : Binding Affinity with SARS-CoV-2 M<sub>pro</sub> using Docking Calculation and target LogP = 2.5 (sum)
+
 ```python model_logP_QED_switch.py --reward_function exponential --num_iterations 175 --use_wandb yes --predictor dock --protein 6LU7 --remarks <remarks> --logP yes --logP_threshold 2.5 --switch no```
+
 - Multi Objective : Binding Affinity with TTBK1 using Docking Calculation and target LogP = 2.5 (sum)
+
 ```python model_logP_QED_switch.py --reward_function exponential --num_iterations 175 --use_wandb yes --predictor dock --protein 4BTK --remarks <remarks> --logP yes --logP_threshold 2.5 --switch no```
+
 - Multi Objective : Binding Affinity with TTBK1 using GIN and target LogP = 2.5 (sum)
+
 ```python model_logP_QED_switch.py --reward_function exponential --num_iterations 175 --use_wandb yes --predictor gin --protein 4BTK --remarks <remarks> --logP yes --logP_threshold 2.5 --switch no```
-- Multi Objective : Binding Affinity with TTBK1 using GIN, target LogP = 2.5, target QED = 1, target TPSA = 100 $\AA^{2}$ and target $\Delta G_{Hyd}$ = -10 kcal/mol (sum)
+
+- Multi Objective : Binding Affinity with TTBK1 using GIN, target LogP = 2.5, target QED = 1, target TPSA = 100 &#8491;<sup>2</sup> and target &#916;G<sub>Hyd</sub> = -10 kcal/mol (sum)
+
 ```python model_logP_QED_switch.py --reward_function exponential --num_iterations 175 --use_wandb yes --predictor gin --protein 4BTK --remarks <remarks> --logP yes --logP_threshold 2.5 --qed yes --qed_threshold 1 --solvation yes --solvation_threshold -10 --tpsa yes --tpsa_threshold 100 --switch no```
+
+- Multi Objective : Binding Affinity with SARS-CoV-2 M<sub>pro</sub> using Docking Calculation and target LogP = 2.5 (alternate)
+
+```python model_logP_QED_switch.py --reward_function exponential --num_iterations 175 --use_wandb yes --predictor dock --protein 6LU7 --remarks <remarks> --logP yes --logP_threshold 2.5 --switch yes```
+
+- Multi Objective : Binding Affinity with TTBK1 using Docking Calculation and target LogP = 2.5 (alternate)
+
+```python model_logP_QED_switch.py --reward_function exponential --num_iterations 175 --use_wandb yes --predictor dock --protein 4BTK --remarks <remarks> --logP yes --logP_threshold 2.5 --switch yes```
+
+- Multi Objective : Binding Affinity with TTBK1 using GIN, target LogP = 2.5 and target QED = 1 (alternate)
+
+```python model_logP_QED_switch.py --reward_function exponential --num_iterations 175 --use_wandb yes --predictor gin --protein 4BTK --remarks <remarks> --logP yes --logP_threshold 2.5 --switch yes --qed yes --qed_threshold 1```
+
+- Multi Objective : Binding Affinity with TTBK1 using GIN, target LogP = 6 and target QED = 1 (alternate)
+
+```python model_logP_QED_switch.py --reward_function exponential --num_iterations 175 --use_wandb yes --predictor gin --protein 4BTK --remarks <remarks> --logP yes --logP_threshold 6 --switch yes --qed yes --qed_threshold 1```
+
+- Multi Objective : Binding Affinity with TTBK1 using GIN and different targets of TPSA and &#916;G<sub>Hyd</sub>
+
+```python model_hydration_tpsa_switch.py --reward_function exponential --num_iterations 175 --use_wandb yes --predictor gin --protein 4BTK --remarks <remarks> --solvation yes --tpsa yes --solvation_threshold <hydration_target> --tpsa_threshold <tpsa_target> --switch yes```
+
+Analysis
+-----------
+For analysis, run the notebook in `Analysis`.
