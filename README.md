@@ -1,4 +1,4 @@
-# Alternate-Reward Reinforcement Learning Guided Drug Molecule Generation for High Binding Affinity to Novel Target
+# MoleGuLAR: Molecule generation using Reinforcement Learning and Alternating Rewards
 Design of new inhibitors for novel targets is a very important problem especially in the current scenario. Conventional approaches undertaken to this end like high-throughput virtual screening require extensive combing through existing datasets in the hope of finding possible matches. In this study we propose a computational strategy for de novo generation of molecules with high binding affinities to the specified target. A deep generative model is built using a stack augmented recurrent neural network for initially generating drug like molecules and then it is optimized using reinforcement learning to start generating molecules with desirable properties the most important of which is the binding affinity. The reinforcement learning section of the pipeline is further extended to multi-objective optimization showcasing the model's ability to generate molecules with a wide variety of properties desirable for drug like molecules, like, LogP, Quantitative Estimate of Drug Likeliness etc. For multi-objective optimization, we have devised a novel strategy for optimization in which the property being used to calculate the reward is changed periodically. In comparison to the conventional approach of taking a weighted sum of all rewards, this strategy has shown much better performance in it's ability to generate a significantly higher number of molecules with desirable properties.
 
 ![Pipeline](Images/MainDiagram.png "Pipeline")
@@ -13,7 +13,9 @@ Installation
 
 Running Experiments
 --------------
-Open the `Optimizer` directory.
+To run the experiments that use AutoDock, AutoDock-GPU will have to be installed from [here](https://github.com/ccsb-scripps/AutoDock-GPU)
+
+After installing AutoDock-GPU, Open the `Optimizer` directory.
 
 To run each of the experiments run the following commands
 - Single Objective: Binding Affinity with SARS-CoV-2 M<sub>pro</sub> using Docking Calculation
@@ -66,4 +68,4 @@ To run each of the experiments run the following commands
 
 Analysis
 -----------
-For analysis, run the notebook in `Analysis`.
+The `Analysis/Analysis.ipynb` notebook supports loading models optimized during each experiment and generating molecules
