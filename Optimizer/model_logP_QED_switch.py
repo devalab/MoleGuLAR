@@ -5,6 +5,7 @@ sys.path.append('./release')
 import argparse
 import os
 import pickle
+import random
 import shutil
 
 import numpy as np
@@ -55,7 +56,7 @@ parser.add_argument("--tpsa_threshold", default=100, type=float)
 parser.add_argument("--solvation_threshold", default=-10, type=float)
 parser.add_argument("--qed_threshold", default=0.8, type=float)
 parser.add_argument("--switch_frequency", default=35, type=int)
-
+parser.add_argument("--seed", default=0, type=int)
 
 
 args = parser.parse_args()
@@ -68,7 +69,7 @@ thresholds = {
 }
 
 receptor = args.protein
-
+random.seed(args.seed)
 if args.device == "CPU":
     device = torch.device('cpu')
     use_cuda = False
@@ -164,8 +165,8 @@ def dock_and_get_score(smile, test=False):
     mol_dir = MOL_DIR
     log_dir = LOGS_DIR
     try:
-        # path = "python2.5 ~/MGLTools-1.5.6/mgltools_x86_64Linux2_1.5.6/MGLToolsPckgs/AutoDockTools/Utilities24"
-        path = "~/MGLTools-1.5.6/MGLToolsPckgs/AutoDockTools/Utilities24"
+        path = "python2.5 ~/MGLTools-1.5.6/mgltools_x86_64Linux2_1.5.6/MGLToolsPckgs/AutoDockTools/Utilities24"
+        #  path = "~/MGLTools-1.5.6/MGLToolsPckgs/AutoDockTools/Utilities24"
         mol = Chem.MolFromSmiles(smile)
         AllChem.EmbedMolecule(mol)
         if test == True:
@@ -186,8 +187,8 @@ def dock_and_get_score(smile, test=False):
             print(MOL_DIR, LOGS_DIR)
         rdmolfiles.MolToPDBFile(mol, f"{MOL_DIR}/{str(OVERALL_INDEX)}.pdb")
 
-        os.system(f"{path}/prepare_ligand4.py -l {MOL_DIR}/{str(OVERALL_INDEX)}.pdb -o {MOL_DIR}/{str(OVERALL_INDEX)}.pdbqt > /dev/null 2>&1")
-        os.system(f"{path}/prepare_receptor4.py -r {receptor}.pdb > /dev/null 2>&1")
+        os.system(f"{path}/prepare_ligand4.py -l {MOL_DIR}/{str(OVERALL_INDEX)}.pdb -o {MOL_DIR}/{str(OVERALL_INDEX)}.pdbqt") # > /dev/null 2>&1")
+        os.system(f"{path}/prepare_receptor4.py -r {receptor}.pdb") # > /dev/null 2>&1")
         os.system(f"{path}/prepare_gpf4.py -i {receptor}_ref.gpf -l {MOL_DIR}/{str(OVERALL_INDEX)}.pdbqt -r {receptor}.pdbqt > /dev/null 2>&1")
 
         os.system(f"autogrid4 -p {receptor}.gpf > /dev/null 2>&1")
