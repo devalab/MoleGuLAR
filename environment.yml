@@ -1,4 +1,4 @@
-name: AltRL
+name: MoleGuLAR
 channels:
   - rdkit
   - pytorch
@@ -171,4 +171,3 @@ dependencies:
     - webencodings==0.5.1
     - widgetsnbextension==3.5.1
     - zipp==3.5.0
-prefix: /home/manan/miniconda3/envs/plots
