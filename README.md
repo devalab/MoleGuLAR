@@ -11,6 +11,17 @@ Installation
 
 ```conda env create --file environment.yml```
 
+
+Docker
+-----------------
+The repo is now also available as a docker image. You can now set up a docker with a GPU and running the experiments in the sections below. To do that use the following commands
+
+```
+docker build -t molegular .
+docker run --gpus all -it --rm molegular
+```
+
+
 Running Experiments
 --------------
 To run the experiments that use AutoDock, AutoDock-GPU will have to be installed from [here](https://github.com/ccsb-scripps/AutoDock-GPU)

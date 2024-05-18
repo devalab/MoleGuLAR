@@ -115,38 +115,39 @@ if args.solvation == 'yes':
 get_reward = rwds.MultiReward(get_reward, use_docking, use_logP, use_qed, use_tpsa, use_solvation, **thresholds)
 
 
-if os.path.exists(f"./logs_{args.reward_function}_{args.remarks}") == False:
-    os.mkdir(f"./logs_{args.reward_function}_{args.remarks}")
+if os.path.exists(f"{os.getenv('OPTIMIZER_DIR')}/logs_{args.reward_function}_{args.remarks}") == False:
+    os.mkdir(f"{os.getenv('OPTIMIZER_DIR')}/logs_{args.reward_function}_{args.remarks}")
 else:
-    shutil.rmtree(f"./logs_{args.reward_function}_{args.remarks}")
-    os.mkdir(f"./logs_{args.reward_function}_{args.remarks}")
+    shutil.rmtree(f"{os.getenv('OPTIMIZER_DIR')}/logs_{args.reward_function}_{args.remarks}")
+    os.mkdir(f"{os.getenv('OPTIMIZER_DIR')}/logs_{args.reward_function}_{args.remarks}")
 
-if os.path.exists(f"./molecules_{args.reward_function}_{args.remarks}") == False:
-    os.mkdir(f"./molecules_{args.reward_function}_{args.remarks}")
+if os.path.exists(f"{os.getenv('OPTIMIZER_DIR')}/molecules_{args.reward_function}_{args.remarks}") == False:
+    os.mkdir(f"{os.getenv('OPTIMIZER_DIR')}/molecules_{args.reward_function}_{args.remarks}")
 else:
-    shutil.rmtree(f"./molecules_{args.reward_function}_{args.remarks}")
-    os.mkdir(f"./molecules_{args.reward_function}_{args.remarks}")
+    shutil.rmtree(f"{os.getenv('OPTIMIZER_DIR')}/molecules_{args.reward_function}_{args.remarks}")
+    os.mkdir(f"{os.getenv('OPTIMIZER_DIR')}/molecules_{args.reward_function}_{args.remarks}")
 
 
-if os.path.exists("./trajectories") == False:
-    os.mkdir(f"./trajectories")
-if os.path.exists("./rewards") == False:
-    os.mkdir(f"./rewards")
-if os.path.exists("./losses") == False:
-    os.mkdir(f"./losses")
-if os.path.exists("./models") == False:
-    os.mkdir(f"./models")
-if os.path.exists("./predictions") == False:
-    os.mkdir("./predictions")
+if os.path.exists(f"{os.getenv('OPTIMIZER_DIR')}/trajectories") == False:
+    os.mkdir(f"{os.getenv('OPTIMIZER_DIR')}/trajectories")
+if os.path.exists(f"{os.getenv('OPTIMIZER_DIR')}/rewards") == False:
+    os.mkdir(f"{os.getenv('OPTIMIZER_DIR')}/rewards")
+if os.path.exists("{os.getenv('OPTIMIZER_DIR')}/losses") == False:
+    os.mkdir(f"{os.getenv('OPTIMIZER_DIR')}/losses")
+if os.path.exists("{os.getenv('OPTIMIZER_DIR')}/models") == False:
+    os.mkdir(f"{os.getenv('OPTIMIZER_DIR')}/models")
+if os.path.exists(f"{os.getenv('OPTIMIZER_DIR')}/predictions") == False:
+    os.mkdir(f"{os.getenv('OPTIMIZER_DIR')}/predictions")
 
 
-MODEL_NAME = f"./models/model_{args.reward_function}_{args.remarks}"
-LOGS_DIR = f"./logs_{args.reward_function}_{args.remarks}"
-MOL_DIR = f"./molecules_{args.reward_function}_{args.remarks}"
+MODEL_NAME = f"{os.getenv('OPTIMIZER_DIR')}/models/model_{args.reward_function}_{args.remarks}"
+LOGS_DIR = f"{os.getenv('OPTIMIZER_DIR')}/logs_{args.reward_function}_{args.remarks}"
+MOL_DIR = f"{os.getenv('OPTIMIZER_DIR')}/molecules_{args.reward_function}_{args.remarks}"
 
-TRAJ_FILE = open(f"./trajectories/traj_{args.reward_function}_{args.remarks}", "w")
-LOSS_FILE = f"./losses/{args.reward_function}_{args.remarks}"
-REWARD_FILE = f"./rewards/{args.reward_function}_{args.remarks}"
+TRAJ_FILE = open(f"{os.getenv('OPTIMIZER_DIR')}/trajectories/traj_{args.reward_function}_{args.remarks}", "w")
+LOSS_FILE = f"{os.getenv('OPTIMIZER_DIR')}/losses/{args.reward_function}_{args.remarks}"
+REWARD_FILE = f"{os.getenv('OPTIMIZER_DIR')}/rewards/{args.reward_function}_{args.remarks}"
+
 
 gen_data_path = args.gen_data
 tokens = ['<', '>', '#', '%', ')', '(', '+', '-', '/', '.', '1', '0', '3', '2', '5', '4', '7',
@@ -164,7 +165,7 @@ def dock_and_get_score(smile, test=False):
     log_dir = LOGS_DIR
     try:
         # path = "python2.5 ~/MGLTools-1.5.6/mgltools_x86_64Linux2_1.5.6/MGLToolsPckgs/AutoDockTools/Utilities24"
-        path = "~/MGLTools-1.5.6/MGLToolsPckgs/AutoDockTools/Utilities24"
+        path = f"{os.getenv('MGL_TOOLS_PATH')}/bin/python2.5 {os.getenv('MGL_TOOLS_PATH')}/MGLToolsPckgs/AutoDockTools/Utilities24"
         mol = Chem.MolFromSmiles(smile)
         AllChem.EmbedMolecule(mol)
         if test == True:
@@ -190,8 +191,7 @@ def dock_and_get_score(smile, test=False):
         os.system(f"{path}/prepare_gpf4.py -i {receptor}_ref.gpf -l {MOL_DIR}/{str(OVERALL_INDEX)}.pdbqt -r {receptor}.pdbqt > /dev/null 2>&1")
 
         os.system(f"autogrid4 -p {receptor}.gpf > /dev/null 2>&1")
-        os.system(f"~/AutoDock-GPU/bin/autodock_gpu_64wi -ffile {receptor}.maps.fld -lfile {MOL_DIR}/{str(OVERALL_INDEX)}.pdbqt -resnam {LOGS_DIR}/{str(OVERALL_INDEX)} -nrun 10 -devnum 1 > /dev/null 2>&1")
-
+        os.system(f"{os.getenv('AUTODOCK_GPU')}/bin/autodock_gpu_64wi -ffile {receptor}.maps.fld -lfile {MOL_DIR}/{str(OVERALL_INDEX)}.pdbqt -resnam {LOGS_DIR}/{str(OVERALL_INDEX)} -nrun 10 -devnum 1")
         cmd = f"cat {LOGS_DIR}/{str(OVERALL_INDEX)}.dlg | grep -i ranking | tr -s '\t' ' ' | cut -d ' ' -f 5 | head -n1"
         stream = os.popen(cmd)
         output = float(stream.read().strip())
@@ -271,8 +271,8 @@ if args.predictor != 'dock':
         my_predictor = GINPredictor('./Predictors/GINPredictor.tar')
 
 if args.use_checkpoint == "yes":
-    if os.path.exists(f"./models/model_{args.reward_function}_{args.remarks}") == True:
-        model_path = f"./models/model_{args.reward_function}_{args.remarks}"
+    if os.path.exists(f"{os.getenv('OPTIMIZER_DIR')}/models/model_{args.reward_function}_{args.remarks}") == True:
+        model_path = f"{os.getenv('OPTIMIZER_DIR')}/models/model_{args.reward_function}_{args.remarks}"
     else:
         model_path = './checkpoints/generator/checkpoint_biggest_rnn'
 else:
